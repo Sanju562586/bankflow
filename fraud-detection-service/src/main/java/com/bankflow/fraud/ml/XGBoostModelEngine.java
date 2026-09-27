@@ -19,7 +19,8 @@ public class XGBoostModelEngine {
     private static final Logger log = LoggerFactory.getLogger(XGBoostModelEngine.class);
 
     // SMOTE-calibrated tree ensemble weights & split thresholds
-    private static final double BASE_SCORE = 0.05; // Prior log-odds / base risk
+    // Prior log-odds for base baseline risk (~10% prior): ln(0.10 / 0.90) ≈ -2.20
+    private static final double BASE_SCORE = -2.20;
     private static final double SMOTE_WEIGHT_SCALE = 1.28;
 
     public static class TransactionFeatures {

@@ -18,13 +18,20 @@ const MIME_TYPES = {
 
 const server = http.createServer((req, res) => {
     let reqPath = req.url.split('?')[0];
-    if (reqPath === '/') reqPath = '/index.html';
+    if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
 
-    const filePath = path.join(PUBLIC_DIR, reqPath);
-    const ext = path.extname(filePath).toLowerCase();
+    // Prevent directory traversal attacks
+    const safePath = path.normalize(path.join(PUBLIC_DIR, path.resolve('/', reqPath)));
+    if (!safePath.startsWith(PUBLIC_DIR)) {
+        res.writeHead(403, { 'Content-Type': 'text/plain' });
+        res.end('Forbidden');
+        return;
+    }
+
+    const ext = path.extname(safePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
-    fs.readFile(filePath, (err, content) => {
+    fs.readFile(safePath, (err, content) => {
         if (err) {
             if (err.code === 'ENOENT') {
                 fs.readFile(path.join(PUBLIC_DIR, 'index.html'), (err2, indexContent) => {

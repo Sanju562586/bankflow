@@ -40,6 +40,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException ex) {
+        log.warn("Illegal argument error: {}", ex.getMessage());
+        Map<String, Object> err = new HashMap<>();
+        err.put("timestamp", Instant.now().toString());
+        err.put("status", HttpStatus.BAD_REQUEST.value());
+        err.put("error", "Bad Request");
+        err.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(err);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = new HashMap<>();

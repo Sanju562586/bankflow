@@ -15,4 +15,7 @@ public interface PaymentTransactionRepository extends JpaRepository<PaymentTrans
     List<PaymentTransaction> findByFromAccountIdOrderByCreatedAtDesc(String fromAccountId);
 
     List<PaymentTransaction> findByToAccountIdOrderByCreatedAtDesc(String toAccountId);
+
+    @org.springframework.data.jpa.repository.Query("SELECT p FROM PaymentTransaction p WHERE p.fromAccountId = :accountId OR p.toAccountId = :accountId ORDER BY p.createdAt DESC")
+    List<PaymentTransaction> findByAccountIdOrderByCreatedAtDesc(@org.springframework.data.repository.query.Param("accountId") String accountId);
 }

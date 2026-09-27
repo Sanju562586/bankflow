@@ -120,4 +120,45 @@ public class NotificationKafkaConsumer {
             dispatcher.dispatch(sms);
         } catch (Exception ignored) {}
     }
+
+    /**
+     * Consumes TransactionRejected events from Kafka.
+     * Triggers alert Push and SMS to inform customer of failure/rejection.
+     */
+    @KafkaListener(topics = "${bankflow.kafka.topics.txn-rejected:txn-rejected}", groupId = "notification-rejected-group")
+    public void handleTransactionRejected(com.bankflow.common.dto.TransactionRejectedEvent event) {
+        log.warn("Notification service received TransactionRejected event for txnId={}, reason={}", 
+                 event.getTransactionId(), event.getRejectionReason());
+
+        String subject = "Transaction Declined";
+        String body = String.format(
+            "Bankflow Alert: Transfer of ₹%s from account %s could not be processed. Reason: %s",
+            event.getAmount(), event.getFromAccountId(),
+            event.getRejectionReason() != null ? event.getRejectionReason() : "Declined by banking rules."
+        );
+
+        NotificationRecord push = new NotificationRecord(
+            "notif-push-" + UUID.randomUUID().toString().substring(0, 8),
+            "device-user",
+            event.getFromAccountId(),
+            NotificationChannel.PUSH,
+            subject,
+            body
+        );
+        try {
+            dispatcher.dispatch(push);
+        } catch (Exception ignored) {}
+
+        NotificationRecord sms = new NotificationRecord(
+            "notif-sms-" + UUID.randomUUID().toString().substring(0, 8),
+            "+919876543210",
+            event.getFromAccountId(),
+            NotificationChannel.SMS,
+            subject,
+            body
+        );
+        try {
+            dispatcher.dispatch(sms);
+        } catch (Exception ignored) {}
+    }
 }

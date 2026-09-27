@@ -32,7 +32,9 @@ public class RateLimiterConfig {
             }
 
             InetSocketAddress remoteAddress = exchange.getRequest().getRemoteAddress();
-            String hostAddress = remoteAddress != null ? remoteAddress.getAddress().getHostAddress() : "127.0.0.1";
+            String hostAddress = (remoteAddress != null && remoteAddress.getAddress() != null)
+                    ? remoteAddress.getAddress().getHostAddress()
+                    : (remoteAddress != null ? remoteAddress.getHostString() : "127.0.0.1");
             return Mono.just("ip:" + hostAddress);
         };
     }

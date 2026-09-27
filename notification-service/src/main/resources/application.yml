@@ -39,6 +39,7 @@ bankflow:
     topics:
       fraud-alerts: fraud-alerts
       txn-approved: txn-approved
+      txn-rejected: txn-rejected
 
 management:
   endpoints:

@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import org.springframework.http.HttpMethod;
+import org.springframework.web.cors.reactive.CorsUtils;
+
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -27,9 +30,9 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
     private final JwtUtil jwtUtil;
 
     private static final List<String> OPEN_ENDPOINTS = List.of(
-        "/auth/",
-        "/actuator/",
-        "/swagger-ui/",
+        "/auth",
+        "/actuator",
+        "/swagger-ui",
         "/v3/api-docs",
         "/fallback"
     );
@@ -43,9 +46,14 @@ public class JwtAuthGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getPath().value();
 
+        // 0. Bypass CORS preflight requests
+        if (request.getMethod() == HttpMethod.OPTIONS || CorsUtils.isPreFlightRequest(request)) {
+            return chain.filter(exchange);
+        }
+
         // 1. Bypass public endpoints
         for (String openPath : OPEN_ENDPOINTS) {
-            if (path.startsWith(openPath)) {
+            if (path.equals(openPath) || path.startsWith(openPath + "/")) {
                 return chain.filter(exchange);
             }
         }

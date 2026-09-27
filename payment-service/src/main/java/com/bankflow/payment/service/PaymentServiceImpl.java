@@ -47,7 +47,8 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentRepository = paymentRepository;
         this.idempotencyRepository = idempotencyRepository;
         this.eventProducer = eventProducer;
-        this.objectMapper = objectMapper;
+        this.objectMapper = (objectMapper != null ? objectMapper : new ObjectMapper())
+                .findAndRegisterModules();
     }
 
     @Override
@@ -162,10 +163,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public List<PaymentResponse> getPaymentsForAccount(String accountId) {
-        List<PaymentTransaction> list = paymentRepository.findByFromAccountIdOrderByCreatedAtDesc(accountId);
-        list.addAll(paymentRepository.findByToAccountIdOrderByCreatedAtDesc(accountId));
-        return list.stream()
-            .distinct()
+        return paymentRepository.findByAccountIdOrderByCreatedAtDesc(accountId).stream()
             .map(PaymentResponse::fromEntity)
             .collect(Collectors.toList());
     }
