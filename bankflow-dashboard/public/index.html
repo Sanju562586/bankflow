@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bankflow - Enterprise Distributed Banking & AI Fraud Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Bankflow</h2>
+                    <span>Cloud-Native Banking</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#topology" class="nav-item active" data-tab="topology">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span>System Topology</span>
+                </a>
+                <a href="#payments" class="nav-item" data-tab="payments">
+                    <i class="fa-solid fa-money-bill-transfer"></i>
+                    <span>Payment Terminal</span>
+                </a>
+                <a href="#fraud" class="nav-item" data-tab="fraud">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>AI Fraud Radar</span>
+                </a>
+                <a href="#accounts" class="nav-item" data-tab="accounts">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span>Account Manager</span>
+                </a>
+                <a href="#notifications" class="nav-item" data-tab="notifications">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>Notification Center</span>
+                    <span class="badge" id="notif-count">0</span>
+                </a>
+                <a href="#kafka" class="nav-item" data-tab="kafka">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    <span>Kafka Event Stream</span>
+                </a>
+                <a href="#api" class="nav-item" data-tab="api">
+                    <i class="fa-solid fa-code"></i>
+                    <span>API Playground</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="gateway-status">
+                    <div class="status-indicator live"></div>
+                    <div class="status-info">
+                        <span class="status-title">API Gateway :8080</span>
+                        <span class="status-sub" id="gateway-latency">12ms • Healthy</span>
+                    </div>
+                </div>
+                <div class="auth-pill">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span id="current-user-role">ROLE_CUSTOMER</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="topbar">
+                <div class="breadcrumbs">
+                    <span class="root-crumb">Bankflow Core</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span class="active-crumb" id="active-crumb-title">System Topology</span>
+                </div>
+
+                <div class="topbar-actions">
+                    <div class="quick-presets">
+                        <button class="btn btn-secondary btn-sm" id="btn-seed-data">
+                            <i class="fa-solid fa-database"></i> Seed Demo Data
+                        </button>
+                        <button class="btn btn-primary btn-sm" id="btn-quick-transfer">
+                            <i class="fa-solid fa-paper-plane"></i> Quick UPI Transfer
+                        </button>
+                        <button class="btn btn-warning btn-sm" id="btn-simulate-fraud">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Simulate Fraud (Groq LLM)
+                        </button>
+                    </div>
+
+                    <div class="user-profile">
+                        <select id="role-selector" class="role-select">
+                            <option value="ROLE_CUSTOMER">Customer (John Doe)</option>
+                            <option value="ROLE_ADMIN">Admin (Ops Lead)</option>
+                            <option value="ROLE_OPERATOR">Fraud Auditor</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div class="views-wrapper">
+
+                <!-- 1. System Topology View -->
+                <section id="view-topology" class="view-panel active">
+                    <div class="panel-header">
+                        <div>
+                            <h1>Architecture & Microservice Topology</h1>
+                            <p class="subtitle">Live representation of the 5 microservices, Kafka event mesh, and AI inference layer</p>
+                        </div>
+                        <div class="header-pills">
+                            <span class="pill pill-success"><i class="fa-solid fa-circle-check"></i> 5/5 Services Online</span>
+                            <span class="pill pill-info"><i class="fa-solid fa-server"></i> Kafka KRaft Active</span>
+                        </div>
+                    </div>
+
+                    <!-- Topology Canvas -->
+                    <div class="topology-grid">
+                        <!-- Client Tier -->
+                        <div class="tier-card client-tier">
+                            <div class="tier-header">
+                                <i class="fa-solid fa-desktop"></i>
+                                <span>Client Tier</span>
+                            </div>
+                            <div class="client-nodes">
+                                <div class="node-chip active"><i class="fa-solid fa-globe"></i> Web Dashboard</div>
+                                <div class="node-chip"><i class="fa-solid fa-mobile-screen"></i> Mobile App</div>
+                                <div class="node-chip"><i class="fa-solid fa-network-wired"></i> API Consumers</div>
+                            </div>
+                        </div>
+
+                        <!-- Downlink arrow -->
+                        <div class="arrow-down"><i class="fa-solid fa-arrow-down-long"></i></div>
+
+                        <!-- API Gateway -->
+                        <div class="service-box gateway-box">
+                            <div class="service-meta">
+                                <div class="service-icon"><i class="fa-solid fa-door-open"></i></div>
+                                <div>
+                                    <h3>API Gateway</h3>
+                                    <span class="tech-tag">Spring Cloud Gateway • Port 8080</span>
+                                </div>
+                            </div>
+                            <div class="service-badges">
+                                <span class="badge-sub"><i class="fa-solid fa-key"></i> JWT Auth</span>
+                                <span class="badge-sub"><i class="fa-solid fa-clock"></i> Redis Token Bucket Rate Limiter</span>
+                            </div>
+                        </div>
+
+                        <!-- 4 Core Microservices Grid -->
+                        <div class="services-cluster">
+                            <!-- Account Service -->
+                            <div class="service-card" id="card-account-service">
+                                <div class="card-top">
+                                    <div class="icon-bubble cyan"><i class="fa-solid fa-wallet"></i></div>
+                                    <span class="status-dot green"></span>
+                                </div>
+                                <h4>Account Service</h4>
+                                <span class="service-port">:8081</span>
+                                <p>CRUD accounts, balance inquiry, ledger ledger</p>
+                                <div class="tech-stack-row">
+                                    <span class="tag">Spring Boot 3</span>
+                                    <span class="tag">PostgreSQL</span>
+                                    <span class="tag">Kafka</span>
+                                </div>
+                            </div>
+
+                            <!-- Payment Service -->
+                            <div class="service-card" id="card-payment-service">
+                                <div class="card-top">
+                                    <div class="icon-bubble purple"><i class="fa-solid fa-credit-card"></i></div>
+                                    <span class="status-dot green"></span>
+                                </div>
+                                <h4>Payment Service</h4>
+                                <span class="service-port">:8082</span>
+                                <p>NEFT / UPI / IMPS, Idempotency key, Saga coordinator</p>
+                                <div class="tech-stack-row">
+                                    <span class="tag">Saga Pattern</span>
+                                    <span class="tag">Idempotency</span>
+                                    <span class="tag">Kafka</span>
+                                </div>
+                            </div>
+
+                            <!-- Fraud Detection Service -->
+                            <div class="service-card" id="card-fraud-service">
+                                <div class="card-top">
+                                    <div class="icon-bubble orange"><i class="fa-solid fa-brain"></i></div>
+                                    <span class="status-dot green"></span>
+                                </div>
+                                <h4>Fraud Detection</h4>
+                                <span class="service-port">:8083</span>
+                                <p>Real-time ML scoring + Groq LLM reasoning</p>
+                                <div class="tech-stack-row">
+                                    <span class="tag">XGBoost (SMOTE)</span>
+                                    <span class="tag">Groq LLM</span>
+                                </div>
+                            </div>
+
+                            <!-- Notification Service -->
+                            <div class="service-card" id="card-notification-service">
+                                <div class="card-top">
+                                    <div class="icon-bubble green"><i class="fa-solid fa-paper-plane"></i></div>
+                                    <span class="status-dot green"></span>
+                                </div>
+                                <h4>Notification Service</h4>
+                                <span class="service-port">:8084</span>
+                                <p>Multi-channel SMS, Email, Push with exponential backoff</p>
+                                <div class="tech-stack-row">
+                                    <span class="tag">Twilio SMS</span>
+                                    <span class="tag">JavaMail</span>
+                                    <span class="tag">Spring Retry</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kafka Event Bus -->
+                        <div class="kafka-bar">
+                            <div class="kafka-header">
+                                <i class="fa-solid fa-wave-square"></i>
+                                <span>Apache Kafka Distributed Event Mesh (KRaft)</span>
+                            </div>
+                            <div class="topics-grid">
+                                <div class="topic-pill" id="topic-txn-events">
+                                    <span class="dot"></span> <strong>txn-events</strong>
+                                    <span class="counter" id="cnt-txn-events">0 msgs</span>
+                                </div>
+                                <div class="topic-pill" id="topic-fraud-alerts">
+                                    <span class="dot red"></span> <strong>fraud-alerts</strong>
+                                    <span class="counter" id="cnt-fraud-alerts">0 msgs</span>
+                                </div>
+                                <div class="topic-pill" id="topic-txn-approved">
+                                    <span class="dot green"></span> <strong>txn-approved</strong>
+                                    <span class="counter" id="cnt-txn-approved">0 msgs</span>
+                                </div>
+                                <div class="topic-pill" id="topic-notification-queue">
+                                    <span class="dot blue"></span> <strong>notification-queue</strong>
+                                    <span class="counter" id="cnt-notif-queue">0 msgs</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data & Observability Tier -->
+                        <div class="infra-tier-grid">
+                            <div class="infra-card">
+                                <div class="infra-title"><i class="fa-solid fa-database"></i> PostgreSQL</div>
+                                <p>Accounts & Transactions with pessimistic locking</p>
+                            </div>
+                            <div class="infra-card">
+                                <div class="infra-title"><i class="fa-solid fa-memory"></i> Redis Cache</div>
+                                <p>Token bucket rate limiter & session state</p>
+                            </div>
+                            <div class="infra-card">
+                                <div class="infra-title"><i class="fa-solid fa-chart-line"></i> Prometheus & Grafana</div>
+                                <p>Micrometer metrics & latency dashboards</p>
+                            </div>
+                            <div class="infra-card">
+                                <div class="infra-title"><i class="fa-solid fa-route"></i> Jaeger Tracing</div>
+                                <p>Distributed end-to-end trace correlation</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Payment Terminal & Saga Visualizer -->
+                <section id="view-payments" class="view-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h1>Payment Terminal & Saga Execution</h1>
+                            <p class="subtitle">Execute NEFT, UPI, or IMPS payments with enforced idempotency keys and multi-step commit tracking</p>
+                        </div>
+                    </div>
+
+                    <div class="two-col-layout">
+                        <!-- Payment Form -->
+                        <div class="card glass-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-credit-card"></i> Initiate Payment Transfer</h3>
+                                <button class="btn btn-xs btn-outline" id="btn-random-payment">Randomize</button>
+                            </div>
+
+                            <form id="payment-form" class="form-grid">
+                                <div class="form-group">
+                                    <label>Sender Account (From)</label>
+                                    <select id="pay-from-account" class="input-control" required></select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Recipient Account (To)</label>
+                                    <select id="pay-to-account" class="input-control" required></select>
+                                </div>
+
+                                <div class="form-row-2">
+                                    <div class="form-group">
+                                        <label>Amount (₹)</label>
+                                        <input type="number" id="pay-amount" class="input-control" value="12500" min="1" step="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Payment Mode</label>
+                                        <select id="pay-mode" class="input-control">
+                                            <option value="UPI">UPI (Max ₹1,00,000)</option>
+                                            <option value="IMPS">IMPS (Max ₹5,00,000)</option>
+                                            <option value="NEFT">NEFT (Unlimited)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        Idempotency Key
+                                        <span class="tooltip-icon" title="Unique key preventing duplicate transactions if network times out"><i class="fa-solid fa-info-circle"></i></span>
+                                    </label>
+                                    <div class="input-with-action">
+                                        <input type="text" id="pay-idempotency-key" class="input-control" readonly>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="btn-refresh-idemp"><i class="fa-solid fa-arrows-rotate"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Transfer Remarks</label>
+                                    <input type="text" id="pay-remarks" class="input-control" value="Invoice payment #4092">
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        <i class="fa-solid fa-lock"></i> Submit Payment Securely
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Live Saga Execution Stepper -->
+                        <div class="card glass-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-network-wired"></i> Saga Multi-Step Commit Tracker</h3>
+                                <span class="badge" id="saga-status-badge">READY</span>
+                            </div>
+
+                            <div class="saga-stepper" id="saga-stepper">
+                                <div class="step-node" id="step-1">
+                                    <div class="step-indicator"><i class="fa-solid fa-check"></i></div>
+                                    <div class="step-content">
+                                        <h4>1. Idempotency Check & Transaction Initiated</h4>
+                                        <p>Key validated in Redis/Postgres; published to Kafka topic <code>txn-events</code></p>
+                                    </div>
+                                </div>
+
+                                <div class="step-node" id="step-2">
+                                    <div class="step-indicator"><i class="fa-solid fa-brain"></i></div>
+                                    <div class="step-content">
+                                        <h4>2. Real-Time XGBoost Fraud Evaluation</h4>
+                                        <p>Features evaluated against SMOTE-calibrated tree ensemble in &lt;15ms</p>
+                                    </div>
+                                </div>
+
+                                <div class="step-node" id="step-3">
+                                    <div class="step-indicator"><i class="fa-solid fa-robot"></i></div>
+                                    <div class="step-content">
+                                        <h4>3. Groq LLM Borderline Case Reasoning</h4>
+                                        <p>Triggered if score in ambiguous zone [0.35 - 0.75] for contextual analysis</p>
+                                    </div>
+                                </div>
+
+                                <div class="step-node" id="step-4">
+                                    <div class="step-indicator"><i class="fa-solid fa-minus"></i></div>
+                                    <div class="step-content">
+                                        <h4>4. Account Service: Debit Source Account</h4>
+                                        <p>Pessimistic write-lock atomic deduction from sender balance</p>
+                                    </div>
+                                </div>
+
+                                <div class="step-node" id="step-5">
+                                    <div class="step-indicator"><i class="fa-solid fa-plus"></i></div>
+                                    <div class="step-content">
+                                        <h4>5. Account Service: Credit Recipient Account</h4>
+                                        <p>Atomic credit to counterparty; compensating rollback if failed</p>
+                                    </div>
+                                </div>
+
+                                <div class="step-node" id="step-6">
+                                    <div class="step-indicator"><i class="fa-solid fa-bell"></i></div>
+                                    <div class="step-content">
+                                        <h4>6. Multi-Channel Dispatch</h4>
+                                        <p>Twilio SMS sandbox + JavaMail + In-App push notification with exponential backoff</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="saga-result-card" id="saga-result-box" style="display: none;">
+                                <div id="saga-result-icon"></div>
+                                <div>
+                                    <h4 id="saga-result-title">Transaction Completed</h4>
+                                    <p id="saga-result-desc">Transaction ID: <code id="saga-result-txnid"></code></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. AI Fraud Radar & Groq LLM Console -->
+                <section id="view-fraud" class="view-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h1>AI Fraud Detection Radar & LLM Reasoning</h1>
+                            <p class="subtitle">Real-time XGBoost ML scoring (SMOTE) with Groq LLM natural-language reasoning for borderline cases</p>
+                        </div>
+                    </div>
+
+                    <div class="fraud-dashboard-grid">
+                        <!-- Score Gauge & Decision Matrix -->
+                        <div class="card glass-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-gauge-high"></i> Current Risk Evaluation Gauge</h3>
+                                <span class="badge" id="gauge-risk-badge">LOW RISK</span>
+                            </div>
+
+                            <div class="gauge-wrapper">
+                                <div class="gauge-dial">
+                                    <div class="gauge-fill" id="gauge-fill-bar"></div>
+                                    <div class="gauge-center">
+                                        <span class="gauge-score" id="gauge-score-val">0.12</span>
+                                        <span class="gauge-label">FRAUD PROBABILITY</span>
+                                    </div>
+                                </div>
+
+                                <div class="threshold-strip">
+                                    <div class="strip-seg green">0.00 - 0.35 (Auto-Approved)</div>
+                                    <div class="strip-seg amber">0.35 - 0.75 (Groq LLM Ambiguity Band)</div>
+                                    <div class="strip-seg red">0.75 - 1.00 (Fraud Blocked)</div>
+                                </div>
+                            </div>
+
+                            <!-- Live Groq Reasoning Card -->
+                            <div class="groq-card" id="groq-reasoning-card">
+                                <div class="groq-card-header">
+                                    <div class="groq-brand">
+                                        <i class="fa-solid fa-sparkles"></i>
+                                        <span>Groq LLM Natural-Language Rationale</span>
+                                    </div>
+                                    <span class="llm-model-tag">Llama-3.1-70b</span>
+                                </div>
+                                <div class="groq-content" id="groq-reasoning-text">
+                                    "Awaiting incoming transaction evaluation..."
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Fraud Alerts Table -->
+                        <div class="card glass-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-triangle-exclamation"></i> Real-Time Fraud Alerts Log</h3>
+                                <span class="badge badge-warning" id="alert-counter-badge">0 Alerts</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="custom-table" id="fraud-alerts-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Alert ID</th>
+                                            <th>From Acc</th>
+                                            <th>Amount</th>
+                                            <th>Score</th>
+                                            <th>Risk</th>
+                                            <th>Triggered Rule</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="fraud-alerts-body">
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">No high-risk fraud alerts recorded yet.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Accounts & Ledger Hub -->
+                <section id="view-accounts" class="view-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h1>Account Management & Real-Time Ledger</h1>
+                            <p class="subtitle">Account CRUD, balance inquiries, and pessimistic locked transaction history</p>
+                        </div>
+                        <button class="btn btn-primary" id="btn-open-create-account">
+                            <i class="fa-solid fa-plus"></i> Open New Account
+                        </button>
+                    </div>
+
+                    <div class="accounts-grid" id="accounts-cards-container">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <div class="card glass-card mt-4">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-clock-rotate-left"></i> Account Statement & Ledger History</h3>
+                            <select id="ledger-account-select" class="input-control select-inline"></select>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="custom-table" id="ledger-table">
+                                <thead>
+                                    <tr>
+                                        <th>Txn Ref</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Description</th>
+                                        <th>Balance After</th>
+                                        <th>Timestamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ledger-body">
+                                    <tr><td colspan="6" class="text-center text-muted">Select an account to view ledger history.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Notification Center -->
+                <section id="view-notifications" class="view-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h1>Multi-Channel Notification Dispatcher</h1>
+                            <p class="subtitle">Twilio SMS sandbox, JavaMail notifications, and in-app push alerts with exponential backoff</p>
+                        </div>
+                    </div>
+
+                    <div class="notif-layout">
+                        <!-- Mobile SMS Screen Simulation -->
+                        <div class="phone-frame">
+                            <div class="phone-top-notch"></div>
+                            <div class="phone-header">
+                                <i class="fa-solid fa-chevron-left"></i>
+                                <span>Bankflow Alerts (+1 415-523-8886)</span>
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div class="phone-screen" id="sms-feed-container">
+                                <!-- Populated dynamically -->
+                                <div class="sms-bubble in">
+                                    <p>Welcome to Bankflow Enterprise Banking. Real-time transaction alerts will appear here.</p>
+                                    <span class="sms-time">System</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification Event Stream & Retry Dashboard -->
+                        <div class="card glass-card notif-log-card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-list-check"></i> Dispatched Notifications & Retry Logs</h3>
+                                <button class="btn btn-xs btn-outline" id="btn-trigger-failed-sms">Test Failed SMS (Trigger Retry)</button>
+                            </div>
+                            <div class="notif-feed-list" id="notif-feed-list">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. Kafka Event Stream -->
+                <section id="view-kafka" class="view-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h1>Apache Kafka Live Event Stream</h1>
+                            <p class="subtitle">Real-time distributed stream for <code>txn-events</code>, <code>fraud-alerts</code>, <code>audit-log</code>, <code>notification-queue</code></p>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="btn-clear-kafka"><i class="fa-solid fa-trash"></i> Clear Stream</button>
+                    </div>
+
+                    <div class="kafka-terminal" id="kafka-terminal">
+                        <div class="term-line info">[KAFKA EVENT BUS] Connected to cluster broker at localhost:9092. Partitions: 4. Acks: all.</div>
+                    </div>
+                </section>
+
+                <!-- 7. API Playground -->
+                <section id="view-api" class="view-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h1>API Gateway & Microservice Playground</h1>
+                            <p class="subtitle">Direct REST endpoint testing, copyable curl commands, and JWT bearer token inspector</p>
+                        </div>
+                    </div>
+
+                    <div class="api-playground-grid">
+                        <div class="card glass-card">
+                            <h3><i class="fa-solid fa-key"></i> Active Bearer Token</h3>
+                            <p class="text-muted">Injected automatically into all API Gateway requests</p>
+                            <textarea id="jwt-display" class="code-area" readonly></textarea>
+                            <div class="token-claims" id="token-claims-box"></div>
+                        </div>
+
+                        <div class="card glass-card">
+                            <h3><i class="fa-solid fa-terminal"></i> Quick cURL Snippets</h3>
+                            <div class="curl-snippet">
+                                <strong>1. Initiate Payment:</strong>
+                                <pre><code>curl -X POST http://localhost:8080/payments \
+  -H "Authorization: Bearer &lt;TOKEN&gt;" \
+  -H "Idempotency-Key: idemp-94821" \
+  -H "Content-Type: application/json" \
+  -d '{"fromAccountId":"acc-1","toAccountId":"acc-2","amount":5000,"mode":"UPI"}'</code></pre>
+                            </div>
+
+                            <div class="curl-snippet">
+                                <strong>2. Fraud Evaluation Test:</strong>
+                                <pre><code>curl -X POST http://localhost:8080/fraud/evaluate \
+  -H "Authorization: Bearer &lt;TOKEN&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"amount":95000,"mode":"UPI","deviceFingerprint":"unrecognized"}'</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Account Modal -->
+    <div class="modal-backdrop" id="create-account-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-plus"></i> Open New Bankflow Account</h3>
+                <button class="modal-close" id="modal-close-btn">&times;</button>
+            </div>
+            <form id="create-account-form" class="modal-body">
+                <div class="form-group">
+                    <label>Full Customer Name</label>
+                    <input type="text" id="new-cust-name" class="input-control" value="Aarav Sharma" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="new-cust-email" class="input-control" value="aarav.sharma@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="text" id="new-cust-phone" class="input-control" value="+919876543210" required>
+                </div>
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label>Currency</label>
+                        <select id="new-cust-currency" class="input-control">
+                            <option value="INR">INR (₹)</option>
+                            <option value="USD">USD ($)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Initial Deposit</label>
+                        <input type="number" id="new-cust-deposit" class="input-control" value="50000" min="0" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
