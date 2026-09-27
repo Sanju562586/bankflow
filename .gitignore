@@ -62,3 +62,6 @@ dist/
 .env
 .env.local
 *.local
+
+# Local developer tools
+.tools/
