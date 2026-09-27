@@ -1,22 +1,13 @@
-package com.bankflow.account.dto;
+package com.bankflow.common.dto;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class BalanceOperationRequest {
+public class BalanceOperationRequest implements Serializable {
 
-    @NotBlank(message = "Transaction ID is required")
     private String transactionId;
-
-    @NotNull(message = "Amount is required")
-    @DecimalMin(value = "0.01", inclusive = true, message = "Amount must be strictly positive")
     private BigDecimal amount;
-
-    @NotBlank(message = "Operation type is required (CREDIT or DEBIT)")
     private String operationType; // CREDIT or DEBIT
-
     private String description;
     private String counterpartyAccountId;
 

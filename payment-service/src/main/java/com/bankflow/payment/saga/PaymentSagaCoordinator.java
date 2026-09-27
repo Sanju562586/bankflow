@@ -1,6 +1,6 @@
 package com.bankflow.payment.saga;
 
-import com.bankflow.account.dto.BalanceOperationRequest;
+import com.bankflow.common.dto.BalanceOperationRequest;
 import com.bankflow.common.enums.TransactionStatus;
 import com.bankflow.payment.model.PaymentTransaction;
 import com.bankflow.payment.repository.PaymentTransactionRepository;

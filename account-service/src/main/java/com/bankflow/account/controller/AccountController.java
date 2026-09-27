@@ -1,7 +1,7 @@
 package com.bankflow.account.controller;
 
 import com.bankflow.account.dto.AccountResponse;
-import com.bankflow.account.dto.BalanceOperationRequest;
+import com.bankflow.common.dto.BalanceOperationRequest;
 import com.bankflow.account.dto.CreateAccountRequest;
 import com.bankflow.account.model.AccountTransaction;
 import com.bankflow.account.service.AccountService;
