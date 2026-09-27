@@ -1,0 +1,64 @@
+# Bitnami Kafka Helm Chart Production Values (KRaft mode)
+# Usage: helm install bankflow-kafka oci://registry-1.docker.io/bitnamicharts/kafka -f kafka-bitnami-helm-values.yaml -n bankflow
+
+kraft:
+  enabled: true
+
+controller:
+  replicaCount: 3
+
+broker:
+  replicaCount: 3
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1024Mi
+    limits:
+      cpu: 2000m
+      memory: 2048Mi
+
+listeners:
+  client:
+    containerPort: 9092
+    protocol: PLAINTEXT
+  controller:
+    containerPort: 9093
+    protocol: PLAINTEXT
+  interbroker:
+    containerPort: 9094
+    protocol: PLAINTEXT
+
+autoCreateTopicsEnable: true
+
+# Pre-provision the 4 core banking Kafka topics
+provisioning:
+  enabled: true
+  topics:
+    - name: "txn-events"
+      partitions: 4
+      replicationFactor: 3
+      config:
+        cleanup.policy: "delete"
+        retention.ms: "604800000" # 7 days
+    - name: "fraud-alerts"
+      partitions: 4
+      replicationFactor: 3
+    - name: "audit-log"
+      partitions: 4
+      replicationFactor: 3
+    - name: "notification-queue"
+      partitions: 4
+      replicationFactor: 3
+    - name: "txn-approved"
+      partitions: 4
+      replicationFactor: 3
+    - name: "account-events"
+      partitions: 4
+      replicationFactor: 3
+    - name: "balance-updates"
+      partitions: 4
+      replicationFactor: 3
+
+metrics:
+  kafka:
+    enabled: true

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bankflow-config
+  namespace: bankflow
+data:
+  SPRING_PROFILES_ACTIVE: "kubernetes"
+  KAFKA_BOOTSTRAP_SERVERS: "bankflow-kafka:9092"
+  ACCOUNT_SERVICE_URL: "http://account-service:8081"
+  PAYMENT_SERVICE_URL: "http://payment-service:8082"
+  FRAUD_SERVICE_URL: "http://fraud-detection-service:8083"
+  NOTIFICATION_SERVICE_URL: "http://notification-service:8084"
+  REDIS_HOST: "bankflow-redis"
+  REDIS_PORT: "6379"
+  POSTGRES_HOST: "bankflow-postgres"
+  POSTGRES_PORT: "5432"
